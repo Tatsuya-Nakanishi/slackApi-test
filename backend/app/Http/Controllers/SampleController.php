@@ -27,7 +27,7 @@ class SampleController extends Controller
             'Cache-Control'             => 'max-age=0',
             'Referer'                   => 'https://slack.com/api',
             'Connection'                => 'keep-alive',
-            'Authorization'             => 'Bearer xoxp-1014698131267-2070398110496-2456326043635-eb463f55b910d2ff3bf9a7ae9185a777',
+            'Authorization'             => 'Bearer ',
         ];
         // dd($path);
         $response = $client->request('GET', $base_url . $path, [
