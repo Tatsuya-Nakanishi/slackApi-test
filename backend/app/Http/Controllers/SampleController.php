@@ -42,10 +42,13 @@ class SampleController extends Controller
             'query'           => $form_params,
         ]);
 
-        //こちらの記述で日本語の文字化けが直らない
         $response_body =  (string) $response->getBody();
-        json_encode($response_body, JSON_UNESCAPED_UNICODE); 
-        return $response_body;
+
+        //dd(json_decode($response_body));
+
+        //レスポンスをjson_decodeで加工
+        return json_decode($response_body);
+        
 
     }
 
