@@ -8,16 +8,16 @@ use Illuminate\Http\JsonResponse;
 
 class SampleController extends Controller
 {
-    //
-    public function callSlackApi($path, $form_params)
+    //新規投稿取得メソッド
+    public function getNewMessage()
     {
-        $base_url = 'https://slack.com/api';
+        $base_url = 'https://slack.com/api/conversations.history';
         $client = new \GuzzleHttp\Client([
             'base_uri'  => $base_url,
             'verify'    => false,
         ]);
         $headers = [
-            'Origin'                    => 'https://slack.com/api',
+            'Origin'                    => 'https://slack.com/api/conversations.history',
             'Accept-Encoding'           => 'gzip, deflate, br',
             'Accept-Language'           => 'ja,en-US;q=0.8,en;q=0.6',
             'Upgrade-Insecure-Requests' => '1',
@@ -27,30 +27,50 @@ class SampleController extends Controller
             'Cache-Control'             => 'max-age=0',
             'Referer'                   => 'https://slack.com/api',
             'Connection'                => 'keep-alive',
-            'Authorization'             => 'Bearer ',
+            //トークンは.envファイルに設定
+            'Authorization'             => 'Bearer ' . env('API_KEY', null),
+        ];
+        $form_params    = [
+            //チャンネルIDと最大取得件数を指定。
+            'channel' => 'C02CQN57B7U',
+            'limit' => 1,
         ];
         // dd($path);
-        $response = $client->request('GET', $base_url . $path, [
+        $response = $client->request('GET', $base_url, [
             'allow_redirects' => true,
             'headers'         => $headers,
             'verify'          => false,
             'query'           => $form_params,
         ]);
-        $response_body = (string) $response->getBody();
+        $response_body =  (string) $response->getBody();
+        json_encode($response_body, JSON_UNESCAPED_UNICODE); 
+        return $response_body;
+
         //return $this->jsonResponse($response_body);
-         dd($response_body);
-        echo $response_body;
-        echo json_encode($response_body, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-
+         //dd($response_body);
+         //var_dump(json_encode($response_body));
+        //echo $response_body;
     }
 
-    public function getChannelHistory()
-    {
-        $path           = '/conversations.history';     // 呼び出すSlack Method
-        $form_params    = [
-            'channel' => 'C013STP3QDV',
-            'limit' => 1,
-        ]; // Slack Methodに渡すパラメータ
-        $this->callSlackApi($path, $form_params);
-    }
+    //新規投稿取得メソッド
+    // public function getNewMessage()
+    // {
+    //     $path           = '/conversations.history';     // 呼び出すSlack Method
+    //     $form_params    = [
+    //         'channel' => 'C02CQN57B7U',
+    //         'limit' => 1,
+    //     ]; 
+    //     $this->callSlackApi($path, $form_params);
+    // }
+
+    //過去の投稿取得メソッド
+    // public function getPastMessages()
+    // {
+    //     $path           = '/conversations.history';     // 呼び出すSlack Method
+    //     $form_params    = [
+    //         'channel' => 'C02CQN57B7U',
+    //         //期間指定のパラメータを挿入
+    //     ]; 
+    //     $this->callSlackApi($path, $form_params);
+    // }
 }
