@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use \App\Models\Article;
+use Illuminate\Support\Str;
+
 
 class SampleController extends Controller
 {
@@ -42,9 +45,21 @@ class SampleController extends Controller
             'query'           => $form_params,
         ]);
 
-        $response_body =  (string) $response->getBody();
 
+        $response_body = $response->getBody();
+
+        $arr = json_decode($response_body, true);
+        $getTitle = Str::between($arr['messages'][0]['text'], '▼', '━━━━━━━━━━━━━━━━');
+        //dd($getTitle);
         //dd(json_decode($response_body));
+
+        $article = new Article();
+        $article->title = $getTitle;
+        $article->content = $arr['messages'][0]['text'];
+
+        //dd($article->content);
+        //保存する前にclient_msg_idが同じものは保存しない処理を記述する
+        $article->save();
 
         //レスポンスをjson_decodeで加工
         return json_decode($response_body);
