@@ -57,11 +57,10 @@ class SampleController extends Controller
         $article->title = $getTitle;
         $article->content = $arr['messages'][0]['text'];
 
-        //dd($article->content);
         //保存する前にclient_msg_idが同じものは保存しない処理を記述する
         $article->save();
 
-        //レスポンスをjson_decodeで加工
+        //レスポンスをjson_decodeで加工。後でフロント画面に渡す
         return json_decode($response_body);
         
 
