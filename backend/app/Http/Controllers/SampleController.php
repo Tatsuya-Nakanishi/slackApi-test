@@ -50,7 +50,7 @@ class SampleController extends Controller
 
         $arr = json_decode($response_body, true);
         $getTitle = Str::between($arr['messages'][0]['text'], '▼', '━━━━━━━━━━━━━━━━');
-        //dd($getTitle);
+        dd($getTitle);
         //dd(json_decode($response_body));
 
         $article = new Article();
