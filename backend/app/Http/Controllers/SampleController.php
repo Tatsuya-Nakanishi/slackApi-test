@@ -68,6 +68,8 @@ class SampleController extends Controller
 
         //レスポンスをjson_decodeで加工。後でフロント画面に渡す
         $articles = Article::all();
+
+        
         return $title;
         
 
