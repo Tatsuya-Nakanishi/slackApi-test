@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use \App\Models\Article;
 use Illuminate\Support\Str;
@@ -10,8 +11,11 @@ use Illuminate\Support\Str;
 class SampleController extends Controller
 {
     //新規投稿取得メソッド
-    public function getNewMessage()
+    public function getNewMessage(Request $request)
     {
+        if ($request->input('type') == 'url_verification') {
+            return $request->input('challenge');
+        }
         $base_url = 'https://slack.com/api/conversations.history';
         $client = new \GuzzleHttp\Client([
             'base_uri'  => $base_url,
@@ -50,18 +54,21 @@ class SampleController extends Controller
 
         $arr = json_decode($response_body, true);
         $getTitle = Str::between($arr['messages'][0]['text'], '▼', '━━━━━━━━━━━━━━━━');
-        //dd($getTitle);
+        //dd($arr['messages'][0]['text']);
         //dd(json_decode($response_body));
 
         $article = new Article();
         $article->title = $getTitle;
+        $title = str_replace('*', '', $getTitle);
+        //dd($title);
         $article->content = $arr['messages'][0]['text'];
 
         //保存する前にclient_msg_idが同じものは保存しない処理を記述する
         $article->save();
 
         //レスポンスをjson_decodeで加工。後でフロント画面に渡す
-        return json_decode($response_body);
+        $articles = Article::all();
+        return $title;
         
 
     }
