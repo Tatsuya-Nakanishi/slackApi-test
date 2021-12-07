@@ -18,6 +18,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/newArticles', 'App\Http\Controllers\SampleController@getNewMessage');
+Route::any('/newArticles', 'App\Http\Controllers\SampleController@getNewMessage');
 Route::get('/pastArticles', 'App\Http\Controllers\SampleController@getPastMessages');
 
